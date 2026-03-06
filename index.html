@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Carrinho Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab-button.active {
+            border-bottom-color: white;
+        }
+
+        .tab-button:hover {
+            opacity: 0.8;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #10B981;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s ease;
+        }
+
+        .item:hover {
+            background: #f9f9f9;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-quantity {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            width: 100px;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #10B981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background: #10B981;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s ease;
+            font-family: inherit;
+        }
+
+        button:hover {
+            background: #059669;
+        }
+
+        button.danger {
+            background: #ef4444;
+        }
+
+        button.danger:hover {
+            background: #dc2626;
+        }
+
+        .add-item-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .add-item-form input {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .cart-summary {
+            background: #f0fdf4;
+            border: 2px solid #10B981;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .cart-total {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #10B981;
+            margin: 1rem 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: #f9f9f9;
+            border-left: 3px solid #10B981;
+            padding-left: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            .tabs {
+                gap: 0.5rem;
+            }
+
+            .tab-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .item {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .item-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            input[type="number"],
+            input[type="text"] {
+                width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🛒 Meu Carrinho Inteligente</h1>
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('shopping')">Mercado</button>
+                <button class="tab-button" onclick="switchTab('cart')">Carrinho</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- TAB: SHOPPING LIST -->
+        <div id="shopping" class="tab-content active">
+            <div class="section">
+                <h2>➕ Adicionar Item</h2>
+                <div class="add-item-form">
+                    <input type="text" id="newItemName" placeholder="Nome do item">
+                    <input type="text" id="newItemQuantity" placeholder="Quantidade">
+                    <button onclick="addNewItem()">Adicionar</button>
+                </div>
+            </div>
+
+            <div id="shopping-items"></div>
+        </div>
+
+        <!-- TAB: CART -->
+        <div id="cart" class="tab-content">
+            <div id="cart-items"></div>
+            <div id="cart-summary"></div>
+        </div>
+    </div>
+
+    <script>
+        // Dados da lista de compras
+        const shoppingList = [
+            // Carnes e Proteínas
+            { id: 1, name: 'Frango (Peito/Filé)', suggested: '6,0 kg', category: '🥩 Carnes e Proteínas', type: 'weight' },
+            { id: 2, name: 'Carne Moída (Patinho/Acém)', suggested: '4,0 kg', category: '🥩 Carnes e Proteínas', type: 'weight' },
+            { id: 3, name: 'Bifes (Alcatra/Coxão Mole)', suggested: '5,0 kg', category: '🥩 Carnes e Proteínas', type: 'weight' },
+            { id: 4, name: 'Frango (Sobrecoxa)', suggested: '3,0 kg', category: '🥩 Carnes e Proteínas', type: 'weight' },
+            { id: 5, name: 'Carne Suína (Lombo/Bisteca)', suggested: '3,0 kg', category: '🥩 Carnes e Proteínas', type: 'weight' },
+            { id: 6, name: 'Ovos', suggested: '3 dúzias (36 un)', category: '🥩 Carnes e Proteínas', type: 'fixed' },
+
+            // Café da Manhã
+            { id: 7, name: 'Achocolatado', suggested: '1 un', category: '🍞 Café da Manhã e Lanches', type: 'fixed' },
+            { id: 8, name: 'Bolacha Maizena', suggested: '2 pacotes', category: '🍞 Café da Manhã e Lanches', type: 'fixed' },
+            { id: 9, name: 'Bolacha Doce', suggested: '4 pacotes', category: '🍞 Café da Manhã e Lanches', type: 'fixed' },
+            { id: 10, name: 'Pão de Forma', suggested: '4 pacotes', category: '🍞 Café da Manhã e Lanches', type: 'fixed' },
+            { id: 11, name: 'Iogurte Criança', suggested: '5 bandejas', category: '🍞 Café da Manhã e Lanches', type: 'fixed' },
+            { id: 12, name: 'Leite Fermentado', suggested: '4 packs', category: '🍞 Café da Manhã e Lanches', type: 'fixed' },
+            { id: 13, name: 'Mussarela', suggested: '200g', category: '🍞 Café da Manhã e Lanches', type: 'fixed' },
+            { id: 14, name: 'Requeijão Cremoso', suggested: '1 pote', category: '🍞 Café da Manhã e Lanches', type: 'fixed' },
+            { id: 15, name: 'Sucos de Sachê', suggested: '25 un', category: '🍞 Café da Manhã e Lanches', type: 'fixed' },
+            { id: 16, name: 'Água com Gás', suggested: '1 fardo', category: '🍞 Café da Manhã e Lanches', type: 'fixed' },
+
+            // Cesta Básica
+            { id: 17, name: 'Arroz', suggested: '10 kg', category: '🍚 Cesta Básica', type: 'fixed' },
+            { id: 18, name: 'Feijão', suggested: '4 kg', category: '🍚 Cesta Básica', type: 'fixed' },
+            { id: 19, name: 'Macarrão', suggested: '5 pacotes', category: '🍚 Cesta Básica', type: 'fixed' },
+            { id: 20, name: 'Óleo de Soja', suggested: '3 un', category: '🍚 Cesta Básica', type: 'fixed' },
+            { id: 21, name: 'Açúcar', suggested: '2 kg', category: '🍚 Cesta Básica', type: 'fixed' },
+            { id: 22, name: 'Sal', suggested: '1 kg', category: '🍚 Cesta Básica', type: 'fixed' },
+            { id: 23, name: 'Café', suggested: '3 pacotes', category: '🍚 Cesta Básica', type: 'fixed' },
+            { id: 24, name: 'Farinha de Trigo', suggested: '2 kg', category: '🍚 Cesta Básica', type: 'fixed' },
+            { id: 25, name: 'Farinha de Mandioca', suggested: '1 kg', category: '🍚 Cesta Básica', type: 'fixed' },
+            { id: 26, name: 'Extrato de Tomate', suggested: '4 un', category: '🍚 Cesta Básica', type: 'fixed' },
+            { id: 27, name: 'Leite Integral', suggested: '15 litros', category: '🍚 Cesta Básica', type: 'fixed' },
+
+            // Higiene e Limpeza
+            { id: 28, name: 'Papel Higiênico', suggested: '12 rolos', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 29, name: 'Sabonete', suggested: '6 un', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 30, name: 'Creme Dental', suggested: '3 un', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 31, name: 'Shampoo/Condicionador', suggested: '1 kit', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 32, name: 'Desodorante', suggested: '3 un', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 33, name: 'Absorventes', suggested: '2 pacotes', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 34, name: 'Água Sanitária', suggested: '5 litros', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 35, name: 'Desinfetante', suggested: '2 litros', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 36, name: 'Detergente', suggested: '3 un', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 37, name: 'Sabão em Pó', suggested: '1 kg', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 38, name: 'Amaciante', suggested: '2 litros', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 39, name: 'Sacos de Lixo', suggested: '1 pacote', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+            { id: 40, name: 'Esponja de Louça', suggested: '1 pacote', category: '🧼 Higiene e Limpeza', type: 'fixed' },
+
+            // Hortifruti
+            { id: 41, name: 'Cebola', suggested: '2 kg', category: '🥔 Hortifruti', type: 'weight' },
+            { id: 42, name: 'Alho', suggested: '4 cabeças', category: '🥔 Hortifruti', type: 'weight' },
+            { id: 43, name: 'Batata', suggested: '3 kg', category: '🥔 Hortifruti', type: 'weight' },
+            { id: 44, name: 'Cenoura', suggested: '1 kg', category: '🥔 Hortifruti', type: 'weight' },
+        ];
+
+        let cart = [];
+        let nextId = 100;
+
+        // Carregar dados do localStorage
+        function loadData() {
+            const saved = localStorage.getItem('shoppingCart');
+            if (saved) {
+                cart = JSON.parse(saved);
+            }
+            const savedNextId = localStorage.getItem('nextId');
+            if (savedNextId) {
+                nextId = parseInt(savedNextId);
+            }
+        }
+
+        // Salvar dados no localStorage
+        function saveData() {
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+            localStorage.setItem('nextId', nextId.toString());
+        }
+
+        // Alternar entre abas
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'shopping') {
+                renderShoppingList();
+            } else {
+                renderCart();
+            }
+        }
+
+        // Renderizar lista de compras
+        function renderShoppingList() {
+            const container = document.getElementById('shopping-items');
+            const grouped = {};
+
+            shoppingList.forEach(item => {
+                if (!grouped[item.category]) {
+                    grouped[item.category] = [];
+                }
+                grouped[item.category].push(item);
+            });
+
+            let html = '';
+            Object.entries(grouped).forEach(([category, items]) => {
+                html += `<div class="section"><h2>${category}</h2>`;
+                items.forEach(item => {
+                    const inCart = cart.find(c => c.id === item.id);
+                    html += `
+                        <div class="item">
+                            <div class="item-info">
+                                <div class="item-name">${item.name}</div>
+                                <div class="item-quantity">Sugestão: ${item.suggested}</div>
+                                ${item.type === 'weight' ? '<div class="info-text">ℹ️ Digite o valor TOTAL que pagou no caixa</div>' : ''}
+                            </div>
+                            <div class="item-actions">
+                                <input type="number" id="price-${item.id}" placeholder="R$ 0,00" step="0.01" min="0">
+                                <button onclick="addToCart(${item.id})">Adicionar</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Adicionar item ao carrinho
+        function addToCart(itemId) {
+            const priceInput = document.getElementById(`price-${itemId}`);
+            const price = parseFloat(priceInput.value);
+
+            if (price <= 0) {
+                alert('Digite um preço válido!');
+                return;
+            }
+
+            const item = shoppingList.find(i => i.id === itemId);
+            const cartItem = {
+                id: nextId++,
+                originalId: itemId,
+                name: item.name,
+                price: price,
+                quantity: item.suggested
+            };
+
+            cart.push(cartItem);
+            saveData();
+            priceInput.value = '';
+            alert('Item adicionado ao carrinho!');
+            renderCart();
+        }
+
+        // Renderizar carrinho
+        function renderCart() {
+            const itemsContainer = document.getElementById('cart-items');
+            const summaryContainer = document.getElementById('cart-summary');
+
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🛒</div><p>Carrinho vazio</p></div>';
+                summaryContainer.innerHTML = '';
+                return;
+            }
+
+            let html = '<div class="section"><h2>Itens no Carrinho</h2>';
+            let total = 0;
+
+            cart.forEach(item => {
+                total += item.price;
+                html += `
+                    <div class="item">
+                        <div class="item-info">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-quantity">${item.quantity}</div>
+                            <div style="font-weight: 600; color: #10B981; margin-top: 0.5rem;">R$ ${item.price.toFixed(2)}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="danger" onclick="removeFromCart(${item.id})">Remover</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            itemsContainer.innerHTML = html;
+
+            summaryContainer.innerHTML = `
+                <div class="cart-summary">
+                    <div style="font-size: 1.1rem; color: #666;">Total da Compra</div>
+                    <div class="cart-total">R$ ${total.toFixed(2)}</div>
+                    <div style="color: #666;">${cart.length} ${cart.length === 1 ? 'item' : 'itens'} no carrinho</div>
+                </div>
+            `;
+        }
+
+        // Remover item do carrinho
+        function removeFromCart(cartItemId) {
+            cart = cart.filter(item => item.id !== cartItemId);
+            saveData();
+            renderCart();
+        }
+
+        // Adicionar novo item
+        function addNewItem() {
+            const name = document.getElementById('newItemName').value;
+            const quantity = document.getElementById('newItemQuantity').value;
+
+            if (!name.trim()) {
+                alert('Digite o nome do item!');
+                return;
+            }
+
+            shoppingList.push({
+                id: nextId++,
+                name: name,
+                suggested: quantity || '1 un',
+                category: '✨ Itens Customizados',
+                type: 'fixed'
+            });
+
+            document.getElementById('newItemName').value = '';
+            document.getElementById('newItemQuantity').value = '';
+            renderShoppingList();
+            alert('Item adicionado à lista!');
+        }
+
+        // Inicializar
+        loadData();
+        renderShoppingList();
+    </script>
+</body>
+</html>
